@@ -8,8 +8,6 @@ namespace lab15
         public static readonly SolidBrush brushBlack = new SolidBrush(Color.Black);
         public static readonly SolidBrush brushWhite = new SolidBrush(Color.White);
         public static readonly Pen penBlack = new Pen(Color.Black, 1);
-        public static readonly Pen penGray = new Pen(Color.Gray, 1);
-        public static readonly Pen penThickBlack = new Pen(Color.Black, 3);
         public static readonly Pen penRed = new Pen(Color.Red);
         public static readonly Pen penBlue = new Pen(Color.Blue);
         public static readonly Font vertexFont = new Font(FontFamily.GenericSansSerif, 13, FontStyle.Regular);
