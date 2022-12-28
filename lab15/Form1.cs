@@ -48,9 +48,13 @@ namespace lab15
             Graphics gfx = Graphics.FromImage(buffer);
             gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
             gfx.Clear(Color.White);
+            
+            
             KeyValuePair<Node, Node> edge = new KeyValuePair<Node, Node>(null, null);
             KeyValuePair<Node, Node> edge2 = new KeyValuePair<Node, Node>(null, null);
             List<KeyValuePair<Node, Node>> drawn = new List<KeyValuePair<Node, Node>>();
+            
+            
             foreach (Node v in graph.Verts)
             {
                 for(int i = 0; i < v.edges.Count; i++)
@@ -67,11 +71,13 @@ namespace lab15
                 }
                 DrawUtils.DrawVertex(gfx, v, v.x, v.y);
             }
+            
             if (mouseMode == MouseMode.ADD_EDGE || mouseMode == MouseMode.REMOVE_EDGE)
             {
                 if (grabbedVertex != null)
                     DrawUtils.DrawLineFromTo(gfx, mouseMode == MouseMode.ADD_EDGE ? DrawUtils.penBlack : DrawUtils.penRed, grabbedVertex.x, grabbedVertex.y, this.mouseX, this.mouseY, false, 0);
             }
+            
             pb_GraphCanvas.Image = buffer;
         }
 
@@ -163,8 +169,7 @@ namespace lab15
 
         private void btn_MinSpan_Click(object sender, EventArgs e)
         {
-            graph.FindMinSpan2();
-            tb_QEdges.Text = Convert.ToString(graph.rebra_k(graph)-graph.MinSpan.Count);
+            tb_QEdges.Text = graph.BellmanFord(0);
         }
 
         private void btn_Save_Click(object sender, EventArgs e)

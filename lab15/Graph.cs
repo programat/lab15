@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 
 namespace lab15
 {
@@ -11,8 +12,6 @@ namespace lab15
     {
         public List<Node> Verts;
         public List<KeyValuePair<Node, Node>> MinSpan;
-        public List<Node> Checked = new List<Node>();
-        public int k = 0;
         public Graph()
         {
             Verts = new List<Node>();
@@ -86,132 +85,190 @@ namespace lab15
             node1.RemoveEdge(node2);
         }
 
-        // public void BellmanFord(Graph graph, int src)
-        // {
-        //     int V = graph.V, E = graph.E;
-        //     int[] dist = new int[V];
-        //
-        //     // Step 1: Initialize distances from src to all
-        //     // other vertices as INFINITE
-        //     for (int i = 0; i < V; ++i)
-        //         dist[i] = int.MaxValue;
-        //     dist[src] = 0;
-        //
-        //     // Step 2: Relax all edges |V| - 1 times. A simple
-        //     // shortest path from src to any other vertex can
-        //     // have at-most |V| - 1 edges
-        //     for (int i = 1; i < V; ++i)
-        //     {
-        //         for (int j = 0; j < E; ++j)
-        //         {
-        //             int u = graph.edge[j].src;
-        //             int v = graph.edge[j].dest;
-        //             int weight = graph.edge[j].weight;
-        //             if (dist[u] != int.MaxValue
-        //                 && dist[u] + weight < dist[v])
-        //                 dist[v] = dist[u] + weight;
-        //         }
-        //     }
-        //
-        //     // Step 3: check for negative-weight cycles. The
-        //     // above step guarantees shortest distances if graph
-        //     // doesn't contain negative weight cycle. If we get
-        //     // a shorter path, then there is a cycle.
-        //     for (int j = 0; j < E; ++j)
-        //     {
-        //         int u = graph.edge[j].src;
-        //         int v = graph.edge[j].dest;
-        //         int weight = graph.edge[j].weight;
-        //         if (dist[u] != int.MaxValue
-        //             && dist[u] + weight < dist[v])
-        //         {
-        //             Console.WriteLine(
-        //                 "Graph contains negative weight cycle");
-        //             return;
-        //         }
-        //     }
-        //     printArr(dist, V);
-        // }
-
-
-        public void FindMinSpan2()
+        public string BellmanFord(int source)
         {
-            MinSpan = new List<KeyValuePair<Node, Node>>();
-            List<KeyValuePair<Node, Node>> all = new List<KeyValuePair<Node, Node>>();
-            KeyValuePair<Node, Node> edge = new KeyValuePair<Node, Node>(null, null);
+            int verticesCount = Verts.Count;
+            int[] distance = new int[verticesCount];
+
+            for (int i = 0; i < verticesCount; i++)
+                distance[i] = int.MaxValue;
+
+            distance[source] = 0;
+            //создали массив ребер
+            // List<KeyValuePair<Node, Node>> edges = new List<KeyValuePair<Node, Node>>();
+            List <Edge> edges = new List<Edge>();
+            //создали матрицу смежности
             foreach (Node node in Verts)
             {
                 foreach(Node n in node.edges)
                 {
-                    all.Add(new KeyValuePair<Node, Node>(node, n));
+                    edges.Add(new Edge(node, n, node.values[node.edges.IndexOf(n)]));
                 }
             }
-            int value;
-            while(all.Count != 0)
+
+            int edgesCount = edges.Count; 
+
+            for (int i = 1; i <= verticesCount - 1; ++i)
             {
-                value = int.MaxValue;
-                edge = new KeyValuePair<Node, Node>(null, null);
-                foreach (Node node in Verts)
+                for (int j = 0; j < edgesCount; ++j)
                 {
-                    for (int j = 0; j < node.edges.Count; j++)
-                    {
-                        if (node.values[j] < value)
-                        {
-                            if (all.Contains(new KeyValuePair<Node, Node>(node, node.edges[j])))
-                            {
-                                value = node.values[j];
-                                edge = new KeyValuePair<Node, Node>(node, node.edges[j]);
-                            }
-                        }
-                    }
-                }
-                if (edge.Key != null) {
-                    MinSpan.Add(edge);
-                    all.Remove(edge);
-                    edge = new KeyValuePair<Node, Node>(edge.Value, edge.Key);
-                    MinSpan.Add(edge);
-                    all.Remove(edge);
-                }
-                bool cycle = false;
-                bool changed = false;
-                KeyValuePair<Node, Node> next = new KeyValuePair<Node, Node>(null, null);
-                List<KeyValuePair<Node, Node>> cycler;
-                foreach (KeyValuePair<Node, Node> minedge in MinSpan)
-                {
-                    cycler = new List<KeyValuePair<Node, Node>>();
-                    next = minedge;
-                    cycler.Add(next);
-                    do
-                    {
-                        changed = false;
-                        foreach (KeyValuePair<Node, Node> nextedge in MinSpan)
-                        {
-                            if (next.Value == nextedge.Key && !(next.Key == nextedge.Value && next.Value == nextedge.Key))
-                            {
-                                if (cycler.Contains(nextedge) || nextedge.Value == minedge.Key) { cycle = true; break; }
-                                else {
-                                    cycler.Add(nextedge);
-                                    changed = true;
-                                }
-                                next = nextedge;
-                                break;
-                            }
-                        }
-                    } while (changed && !cycle);
-                    if (cycle)
-                    {
-                        MinSpan.RemoveAt(MinSpan.Count - 1);
-                        MinSpan.RemoveAt(MinSpan.Count - 1);
-                        break;
+                    int u = edges[j].Source.id;
+                    int v = edges[j].Destination.id;
+                    int weight = edges[j].Value;
+
+                    if (distance[u] != int.MaxValue && distance[u] + weight < distance[v]) {
+                        distance[v] = distance[u] + weight;
                     }
                 }
             }
-            int bruh = MinSpan.Count;
-            for (int i = 0; i < bruh/2; i++)
+            
+            string text_msg = "No negative weight cycle!";
+            for (int i = 0; i < edgesCount; ++i)
             {
-                MinSpan.RemoveAt(i);
+                int u = edges[i].Source.id;
+                int v = edges[i].Destination.id;
+                int weight = edges[i].Value;
+
+                if (distance[u] != int.MaxValue && distance[u] + weight < distance[v]) {
+                    text_msg = "Graph contains negative weight cycle.";
+                    
+                }
             }
+            
+            // MinSpan.Add(new KeyValuePair<Node, Node>(edges[0].Source, edges[0].Destination));
+            // MinSpan = new List<KeyValuePair<Node, Node>>();
+            // List<KeyValuePair<Node, Node>> all = new List<KeyValuePair<Node, Node>>();
+            // KeyValuePair<Node, Node> edge = new KeyValuePair<Node, Node>(null, null);
+            //
+            // //создали матрицу смежности
+            // foreach (Node node in Verts)
+            // {
+            //     foreach(Node n in node.edges)
+            //     {
+            //         all.Add(new KeyValuePair<Node, Node>(node, n));
+            //     }
+            // }
+            //
+            // List<int> dist = new List<int>();
+            // for (int i = 0; i < Verts.Count(); ++i)
+            //     dist[i] = int.MaxValue;
+            // dist[src] = 0;
+            //
+            // for (int i = 1; i < Verts.Count(); ++i)
+            // {
+            //     for (int j = 0; j < all.Count(); ++j)
+            //     {
+            //         int u = all[j].Key.id;
+            //         int v = all[j].Value.id;
+            //         int weight = all[j].Key.values;
+            //         if (dist[u] != int.MaxValue && dist[u] + weight < dist[v])
+            //             dist[v] = dist[u] + weight;
+            //     }
+            // }
+            //
+            // string text_msg = "No negative weight cycle!";
+            // for (int i = 0; i < Verts.Count(); ++i) {
+            //     int u = all[i].Key.id;
+            //     int v = all[i].Value.id;
+            //     int weight = all[i].Key.values;
+            //
+            //     if (dist[u] != int.MaxValue && dist[u] + weight < dist[v])
+            //          text_msg = "Graph contains negative weight cycle.";
+            // }
+        
+            // for(int i = 0; i < dist.Count; i++) {
+            //     MinSpan.Add(i, Verts[i].values[i]);
+            // }
+
+            foreach (var i in edges) {
+                if (i.Value < 0) {
+                    MinSpan.Add(new KeyValuePair<Node, Node>(i.Source, i.Destination));
+                    break;
+                }
+            }
+            
+            return text_msg;
         }
+        
+        // public void FindMinSpan2()
+        // {
+        //     MinSpan = new List<KeyValuePair<Node, Node>>();
+        //     List<KeyValuePair<Node, Node>> all = new List<KeyValuePair<Node, Node>>();
+        //     KeyValuePair<Node, Node> edge = new KeyValuePair<Node, Node>(null, null);
+        //     foreach (Node node in Verts)
+        //     {
+        //         foreach(Node n in node.edges)
+        //         {
+        //             all.Add(new KeyValuePair<Node, Node>(node, n));
+        //         }
+        //     }
+        //     int value;
+        //     while(all.Count != 0)
+        //     {
+        //         value = int.MaxValue;
+        //         edge = new KeyValuePair<Node, Node>(null, null);
+        //         foreach (Node node in Verts)
+        //         {
+        //             for (int j = 0; j < node.edges.Count; j++)
+        //             {
+        //                 if (node.values[j] < value)
+        //                 {
+        //                     if (all.Contains(new KeyValuePair<Node, Node>(node, node.edges[j])))
+        //                     {
+        //                         value = node.values[j];
+        //                         edge = new KeyValuePair<Node, Node>(node, node.edges[j]);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         if (edge.Key != null) {
+        //             MinSpan.Add(edge);
+        //             all.Remove(edge);
+        //             edge = new KeyValuePair<Node, Node>(edge.Value, edge.Key);
+        //             MinSpan.Add(edge);
+        //             all.Remove(edge);
+        //         }
+        //         bool cycle = false;
+        //         bool changed = false;
+        //         KeyValuePair<Node, Node> next = new KeyValuePair<Node, Node>(null, null);
+        //         List<KeyValuePair<Node, Node>> cycler;
+        //         foreach (KeyValuePair<Node, Node> minedge in MinSpan)
+        //         {
+        //             cycler = new List<KeyValuePair<Node, Node>>();
+        //             next = minedge;
+        //             cycler.Add(next);
+        //             do
+        //             {
+        //                 changed = false;
+        //                 foreach (KeyValuePair<Node, Node> nextedge in MinSpan)
+        //                 {
+        //                     if (next.Value == nextedge.Key && !(next.Key == nextedge.Value && next.Value == nextedge.Key))
+        //                     {
+        //                         if (cycler.Contains(nextedge) || nextedge.Value == minedge.Key) { cycle = true; break; }
+        //                         else {
+        //                             cycler.Add(nextedge);
+        //                             changed = true;
+        //                         }
+        //                         next = nextedge;
+        //                         break;
+        //                     }
+        //                 }
+        //             } while (changed && !cycle);
+        //             if (cycle)
+        //             {
+        //                 MinSpan.RemoveAt(MinSpan.Count - 1);
+        //                 MinSpan.RemoveAt(MinSpan.Count - 1);
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     int bruh = MinSpan.Count;
+        //     for (int i = 0; i < bruh/2; i++)
+        //     {
+        //         MinSpan.RemoveAt(i);
+        //     }
+        // }
+        
         public int rebra_k(Graph gr)
         {
             int k = 0;
