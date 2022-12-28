@@ -11,7 +11,6 @@ namespace TestProject
         [TestMethod]
         public void TestMethod1()
         {
-
             Graph graph = new Graph("G.grf");
             graph.BellmanFord(0);
             List<KeyValuePair<Node, Node>> MinSpan = new List<KeyValuePair<Node, Node>>();

@@ -24,8 +24,8 @@ namespace lab15
         #region Код, автоматически созданный конструктором форм Windows
 
         /// <summary>
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -130,7 +130,7 @@ namespace lab15
             // 
             // btn_MinSpan
             // 
-            this.btn_MinSpan.Location = new System.Drawing.Point(280, 13);
+            this.btn_MinSpan.Location = new System.Drawing.Point(318, 13);
             this.btn_MinSpan.Name = "btn_MinSpan";
             this.btn_MinSpan.Size = new System.Drawing.Size(175, 23);
             this.btn_MinSpan.TabIndex = 7;
@@ -143,13 +143,13 @@ namespace lab15
             this.tb_QEdges.Enabled = false;
             this.tb_QEdges.Location = new System.Drawing.Point(280, 43);
             this.tb_QEdges.Name = "tb_QEdges";
-            this.tb_QEdges.Size = new System.Drawing.Size(175, 20);
+            this.tb_QEdges.Size = new System.Drawing.Size(253, 20);
             this.tb_QEdges.TabIndex = 8;
             this.tb_QEdges.TextChanged += new System.EventHandler(this.tb_QEdges_TextChanged);
             // 
             // btn_Save
             // 
-            this.btn_Save.Location = new System.Drawing.Point(483, 12);
+            this.btn_Save.Location = new System.Drawing.Point(565, 13);
             this.btn_Save.Name = "btn_Save";
             this.btn_Save.Size = new System.Drawing.Size(75, 23);
             this.btn_Save.TabIndex = 9;
@@ -159,7 +159,7 @@ namespace lab15
             // 
             // btn_Load
             // 
-            this.btn_Load.Location = new System.Drawing.Point(483, 43);
+            this.btn_Load.Location = new System.Drawing.Point(565, 41);
             this.btn_Load.Name = "btn_Load";
             this.btn_Load.Size = new System.Drawing.Size(75, 23);
             this.btn_Load.TabIndex = 10;
@@ -213,7 +213,6 @@ namespace lab15
             ((System.ComponentModel.ISupportInitialize)(this.pb_GraphCanvas)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
